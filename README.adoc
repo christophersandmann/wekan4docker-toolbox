@@ -1,0 +1,19 @@
+= Wekan for Docker Toolbox (Windows)
+
+== Problem
+If you try to install Wekan Docker like this https://github.com/wekan/wekan/wiki/Install-Wekan-Docker-for-testing and try to mount a volume to mongodb you will run into an error as the filesystem of VirtualBox (used by Docker Toolbox) is not supported in mongodb. See https://github.com/docker-library/mongo/issues/30 and https://docs.mongodb.com/manual/administration/production-notes/#fsync-on-directories for more details.
+
+== Solution (suitable for a little longer testing-phase with consistent data on a windows machine)
+Make a backup of the mongodb every view minutes with a cronjob and persist the exported data to a docker volume. The uploaded files are stored in mongodb as well so they will be backuped.
+
+== To start testing...
+
+* install Docker Toolbox (with Docker-Compose)
+* clone this repository
+* tweak values of "mongodbbackup" in docker-compose.yml for your needs
+* add a Windows env-variable "USERNAME" or tweak value of the volume path to your needs
+* run "docker-compose up"
+* start using wekan
+
+== Restore a backup
+Execute with last backup-date: "docker exec wekan_mongodbbackup_1 /restore.sh /backup/2016.06.23.114014"

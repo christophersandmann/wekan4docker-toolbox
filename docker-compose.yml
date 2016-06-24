@@ -1,0 +1,26 @@
+﻿wekan:
+  image: mquandalle/wekan
+  links:
+    - wekandb:db
+  environment:
+    - MONGO_URL=mongodb://db
+    - ROOT_URL=http://localhost:8080
+  ports:
+    - 8090:80
+
+wekandb:
+   image: mongo:3.0
+#NOT WORKING ON WINDOWS as VirtualBox-Filesystem is not supported by mongodb:
+# volumes:
+#     - /c/Users/${USERNAME}/wekan/volumes/data:/data/db           
+
+mongodbbackup:
+  image: tutum/mongodb-backup:latest
+  links:
+    - wekandb:mongodb
+  environment:
+    - CRON_TIME=30 * * * *
+    - MAX_BACKUPS=10
+    - INIT_BACKUP=yes
+  volumes:
+    - /c/Users/${USERNAME}/wekan/volumes/mongodb-backup:/backup
